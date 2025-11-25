@@ -137,17 +137,17 @@ export default function DashboardLayout() {
 							)}
 						>
 							<div className="relative">
-								<div className="p-2.5 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl shadow-lg shadow-primary-500/30">
-									<Activity className="w-6 h-6 text-white" />
+								<div className="p-2.5 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl shadow-lg shadow-primary-500/30 border border-gray-200">
+									<Activity className="w-6 h-6 text-blue" />
 								</div>
 								<div className="absolute -bottom-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full border-2 border-white" />
 							</div>
 							{!sidebarCollapsed && (
 								<div className="animate-fade-in">
-									<span className="text-xl font-bold bg-gradient-to-r from-primary-600 to-primary-500 bg-clip-text text-transparent">
-										DISS
+									<span className="text-xl font-bold bg-gradient-to-r from-primary-600 to-primary-500 bg-clip-text">
+										PharmaAssure
 									</span>
-									<p className="text-[10px] text-slate-400 font-medium tracking-wider uppercase">
+									<p className="text-[10px] text-gray-600 font-medium tracking-wider uppercase">
 										Drug Inventory System
 									</p>
 								</div>
@@ -185,7 +185,7 @@ export default function DashboardLayout() {
 										"group flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",
 										sidebarCollapsed && "lg:justify-center lg:px-2",
 										isActive
-											? "bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/30"
+											? "bg-gradient-to-r from-primary-500 to-primary-600 text-blue shadow-lg shadow-primary-500/30 border border-gray-300"
 											: "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
 									)
 								}
@@ -219,13 +219,13 @@ export default function DashboardLayout() {
 					<div className="p-4 border-t border-slate-200/60">
 						<div
 							className={clsx(
-								"flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-slate-50 to-slate-100/50 border border-slate-200/50 transition-all duration-300",
+								"flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-gray-50 to-slate-100/50 border border-slate-200/50 transition-all duration-300",
 								sidebarCollapsed && "lg:justify-center lg:p-2"
 							)}
 						>
 							<div className="relative">
-								<div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl shadow-md">
-									<User className="w-5 h-5 text-white" />
+								<div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl shadow-md border border-gray-300">
+									<User className="w-5 h-5 text-blue" />
 								</div>
 								<div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 rounded-full border-2 border-white" />
 							</div>
@@ -235,7 +235,7 @@ export default function DashboardLayout() {
 										{user?.name}
 									</p>
 									<p className="text-xs text-slate-500 capitalize flex items-center gap-1">
-										<span className="w-1.5 h-1.5 bg-primary-500 rounded-full" />
+										{/* <span className="w-1.5 h-1.5 bg-primary-500 rounded-full" /> */}
 										{user?.role}
 									</p>
 								</div>
@@ -277,12 +277,12 @@ export default function DashboardLayout() {
 						</div>
 
 						<div className="flex items-center gap-3">
-							<button
+							{/* <button
 								onClick={() => setSearchOpen(!searchOpen)}
 								className="p-2.5 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors"
 							>
 								<Search className="w-5 h-5" />
-							</button>
+							</button> */}
 
 							<button
 								onClick={() => navigate("/alerts")}
@@ -300,10 +300,10 @@ export default function DashboardLayout() {
 							<div className="relative">
 								<button
 									onClick={() => setUserMenuOpen(!userMenuOpen)}
-									className="flex items-center gap-3 p-2 pl-2 pr-3 text-slate-600 hover:bg-slate-100 rounded-xl transition-colors"
+									className="flex items-center gap-3 p-2 pl-2 pr-3 text-blue hover:bg-slate-100 rounded-xl transition-colors"
 								>
-									<div className="flex items-center justify-center w-9 h-9 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl shadow-sm">
-										<User className="w-4 h-4 text-white" />
+									<div className="flex items-center justify-center w-9 h-9 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl shadow-sm border border-gray-300">
+										<User className="w-4 h-4 text-blue-800" />
 									</div>
 									<ChevronDown
 										className={clsx(

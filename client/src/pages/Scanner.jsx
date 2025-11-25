@@ -12,6 +12,10 @@ import {
 	Camera,
 	ArrowRight,
 	AlertCircle,
+	Zap,
+	Shield,
+	Sparkles,
+	Eye,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -80,9 +84,7 @@ export default function Scanner() {
 		}
 	};
 
-	const onScanError = (error) => {
-		// Ignore scan errors
-	};
+	const onScanError = (error) => {};
 
 	const handleUpdateMovement = async (movementId, location) => {
 		try {
@@ -98,267 +100,346 @@ export default function Scanner() {
 
 	return (
 		<div className="space-y-6 animate-fade-in">
-			{/* Header */}
-			<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-				<div>
-					<h1 className="text-2xl font-bold text-slate-900">QR Scanner</h1>
-					<p className="text-slate-500">
-						Scan drug QR codes to verify and track inventory
-					</p>
-				</div>
+			{/* Header with gradient background */}
+			<div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-teal-500 via-cyan-500 to-teal-600 p-6 text-white">
+				<div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32"></div>
+				<div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full translate-y-24 -translate-x-24"></div>
+				<div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+					<div className="flex items-center gap-4">
+						<div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+							<Scan className="w-7 h-7 text-white" />
+						</div>
+						<div>
+							<h1 className="text-2xl font-bold">QR Scanner</h1>
+							<p className="text-teal-100">
+								Scan drug QR codes to verify and track inventory
+							</p>
+						</div>
+					</div>
 
-				{/* Scan Mode Toggle */}
-				<div className="flex gap-2 p-1 bg-slate-100 rounded-xl">
-					<button
-						onClick={() => setScanMode("drug")}
-						className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-							scanMode === "drug"
-								? "bg-white text-teal-600 shadow-sm"
-								: "text-slate-600 hover:text-slate-900"
-						}`}
-					>
-						<Package className="w-4 h-4" />
-						Drug
-					</button>
-					<button
-						onClick={() => setScanMode("movement")}
-						className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-							scanMode === "movement"
-								? "bg-white text-teal-600 shadow-sm"
-								: "text-slate-600 hover:text-slate-900"
-						}`}
-					>
-						<Truck className="w-4 h-4" />
-						Movement
-					</button>
+					{/* Scan Mode Toggle */}
+					<div className="flex gap-1 p-1 bg-white/20 backdrop-blur-sm rounded-xl">
+						<button
+							onClick={() => setScanMode("drug")}
+							className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
+								scanMode === "drug"
+									? "bg-white text-teal-600 shadow-lg"
+									: "text-white hover:bg-white/10"
+							}`}
+						>
+							<Package className="w-4 h-4" />
+							Drug
+						</button>
+						<button
+							onClick={() => setScanMode("movement")}
+							className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
+								scanMode === "movement"
+									? "bg-white text-teal-600 shadow-lg"
+									: "text-white hover:bg-white/10"
+							}`}
+						>
+							<Truck className="w-4 h-4" />
+							Movement
+						</button>
+					</div>
 				</div>
 			</div>
 
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 				{/* Scanner Panel */}
-				<div className="card-elevated">
-					<div className="flex items-center gap-3 mb-6">
-						<div className="icon-box icon-box-lg bg-gradient-to-br from-teal-500 to-cyan-500">
-							<Scan className="w-6 h-6 text-white" />
-						</div>
-						<div>
-							<h2 className="text-lg font-semibold text-slate-900">Scanner</h2>
-							<p className="text-sm text-slate-500">
-								{scanMode === "drug"
-									? "Scan drug QR codes"
-									: "Scan movement QR codes"}
-							</p>
+				<div className="bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden">
+					<div className="p-6 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
+						<div className="flex items-center gap-3">
+							<div className="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-teal-500/25">
+								<Camera className="w-6 h-6 text-white" />
+							</div>
+							<div>
+								<h2 className="text-lg font-semibold text-slate-900">
+									Scanner
+								</h2>
+								<p className="text-sm text-slate-500">
+									{scanMode === "drug"
+										? "Scan drug QR codes"
+										: "Scan movement QR codes"}
+								</p>
+							</div>
 						</div>
 					</div>
 
-					{!scanning ? (
-						<div className="text-center py-12">
-							<div className="relative inline-block mb-6">
-								<div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
-									<QrCode className="w-16 h-16 text-slate-400" />
-								</div>
-								{/* Scanning Animation Overlay */}
-								<div className="absolute inset-0 rounded-3xl border-2 border-dashed border-teal-300 animate-pulse"></div>
-							</div>
-							<p className="text-slate-500 mb-6">
-								Position QR code within the scanner frame
-							</p>
-							<button onClick={startScanner} className="btn-primary">
-								<Camera className="w-4 h-4" />
-								Start Scanner
-							</button>
-						</div>
-					) : (
-						<div className="space-y-4">
-							<div className="relative rounded-2xl overflow-hidden bg-slate-900">
-								{/* Scanner Overlay */}
-								<div className="absolute inset-0 z-10 pointer-events-none">
-									<div className="absolute inset-0 flex items-center justify-center">
-										<div className="w-64 h-64 relative">
-											{/* Corner Brackets */}
-											<div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-teal-400 rounded-tl-lg"></div>
-											<div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-teal-400 rounded-tr-lg"></div>
-											<div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-teal-400 rounded-bl-lg"></div>
-											<div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-teal-400 rounded-br-lg"></div>
-											{/* Scanning Line */}
-											<div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-teal-400 to-transparent animate-scan"></div>
-										</div>
+					<div className="p-6">
+						{!scanning ? (
+							<div className="text-center py-8">
+								<div className="relative inline-block mb-6">
+									{/* Animated rings */}
+									<div className="absolute inset-0 w-36 h-36 rounded-3xl border-2 border-teal-200 animate-ping opacity-20"></div>
+									<div className="absolute inset-2 w-32 h-32 rounded-3xl border-2 border-teal-300 animate-pulse"></div>
+									<div className="relative w-36 h-36 rounded-3xl bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center border-2 border-dashed border-slate-300">
+										<QrCode className="w-16 h-16 text-slate-400" />
 									</div>
 								</div>
-								<div id="qr-reader" className="w-full" />
+								<h3 className="font-semibold text-slate-900 mb-2">
+									Ready to Scan
+								</h3>
+								<p className="text-slate-500 mb-6 max-w-xs mx-auto">
+									Position the QR code within the scanner frame for quick
+									verification
+								</p>
+								<button
+									onClick={startScanner}
+									className="btn btn-primary px-8 py-3 text-base"
+								>
+									<Zap className="w-5 h-5" />
+									Start Scanner
+								</button>
 							</div>
-							<button onClick={stopScanner} className="btn-secondary w-full">
-								<X className="w-4 h-4" />
-								Stop Scanner
-							</button>
-						</div>
-					)}
+						) : (
+							<div className="space-y-4">
+								<div className="relative rounded-2xl overflow-hidden bg-slate-900 shadow-2xl">
+									{/* Scanner Overlay */}
+									<div className="absolute inset-0 z-10 pointer-events-none">
+										<div className="absolute inset-0 flex items-center justify-center">
+											<div className="w-64 h-64 relative">
+												{/* Corner Brackets with glow */}
+												<div className="absolute top-0 left-0 w-10 h-10 border-t-4 border-l-4 border-teal-400 rounded-tl-lg shadow-lg shadow-teal-400/50"></div>
+												<div className="absolute top-0 right-0 w-10 h-10 border-t-4 border-r-4 border-teal-400 rounded-tr-lg shadow-lg shadow-teal-400/50"></div>
+												<div className="absolute bottom-0 left-0 w-10 h-10 border-b-4 border-l-4 border-teal-400 rounded-bl-lg shadow-lg shadow-teal-400/50"></div>
+												<div className="absolute bottom-0 right-0 w-10 h-10 border-b-4 border-r-4 border-teal-400 rounded-br-lg shadow-lg shadow-teal-400/50"></div>
+												{/* Scanning Line */}
+												<div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-teal-400 to-transparent animate-scan shadow-lg shadow-teal-400/50"></div>
+											</div>
+										</div>
+									</div>
+									<div id="qr-reader" className="w-full" />
+								</div>
+								<button
+									onClick={stopScanner}
+									className="btn btn-secondary w-full py-3"
+								>
+									<X className="w-4 h-4" />
+									Stop Scanner
+								</button>
+							</div>
+						)}
+					</div>
 				</div>
 
 				{/* Results Panel */}
-				<div className="card-elevated">
-					<div className="flex items-center gap-3 mb-6">
-						<div className="icon-box icon-box-lg bg-gradient-to-br from-emerald-500 to-teal-500">
-							<CheckCircle className="w-6 h-6 text-white" />
-						</div>
-						<div>
-							<h2 className="text-lg font-semibold text-slate-900">
-								Scan Result
-							</h2>
-							<p className="text-sm text-slate-500">Verification details</p>
+				<div className="bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden">
+					<div className="p-6 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
+						<div className="flex items-center gap-3">
+							<div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-500/25">
+								<Shield className="w-6 h-6 text-white" />
+							</div>
+							<div>
+								<h2 className="text-lg font-semibold text-slate-900">
+									Verification Result
+								</h2>
+								<p className="text-sm text-slate-500">Authentication details</p>
+							</div>
 						</div>
 					</div>
 
-					{loading ? (
-						<div className="flex flex-col items-center justify-center py-16">
-							<div className="relative">
-								<div className="w-16 h-16 border-4 border-slate-200 rounded-full"></div>
-								<div className="absolute inset-0 w-16 h-16 border-4 border-teal-500 rounded-full border-t-transparent animate-spin"></div>
-							</div>
-							<p className="text-slate-500 mt-4">Verifying drug...</p>
-						</div>
-					) : drug ? (
-						<div className="space-y-4 animate-scale-in">
-							{/* Success Banner */}
-							<div className="flex items-center gap-3 p-4 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl">
-								<div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
-									<CheckCircle className="w-5 h-5 text-emerald-600" />
+					<div className="p-6">
+						{loading ? (
+							<div className="flex flex-col items-center justify-center py-16">
+								<div className="relative">
+									<div className="w-20 h-20 border-4 border-slate-100 rounded-full"></div>
+									<div className="absolute inset-0 w-20 h-20 border-4 border-teal-500 rounded-full border-t-transparent animate-spin"></div>
+									<div
+										className="absolute inset-2 w-16 h-16 border-4 border-teal-300 rounded-full border-b-transparent animate-spin"
+										style={{
+											animationDirection: "reverse",
+											animationDuration: "1.5s",
+										}}
+									></div>
 								</div>
-								<div>
-									<span className="font-semibold text-emerald-700">
-										Drug Verified
-									</span>
-									<p className="text-sm text-emerald-600">
-										Authentic product confirmed
-									</p>
-								</div>
+								<p className="text-slate-600 mt-6 font-medium">
+									Verifying authenticity...
+								</p>
+								<p className="text-slate-400 text-sm mt-1">Please wait</p>
 							</div>
+						) : drug ? (
+							<div className="space-y-4 animate-scale-in">
+								{/* Success Banner */}
+								<div className="relative overflow-hidden p-5 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl text-white">
+									<div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+									<div className="relative flex items-center gap-4">
+										<div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+											<CheckCircle className="w-7 h-7 text-white" />
+										</div>
+										<div>
+											<h3 className="font-bold text-lg">Verified Authentic</h3>
+											<p className="text-emerald-100">
+												Product authenticity confirmed
+											</p>
+										</div>
+										<Sparkles className="w-6 h-6 ml-auto text-white/60" />
+									</div>
+								</div>
 
-							{/* Drug Info */}
-							<div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl">
-								<div className="w-14 h-14 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center">
-									<Package className="w-7 h-7 text-white" />
-								</div>
-								<div>
-									<h3 className="font-semibold text-slate-900">{drug.name}</h3>
-									<p className="text-sm text-slate-500">{drug.drugId}</p>
-								</div>
-							</div>
-
-							{/* Drug Details Grid */}
-							<div className="grid grid-cols-2 gap-3">
-								{[
-									{ label: "Batch", value: drug.batchNo },
-									{ label: "Quantity", value: `${drug.quantity} ${drug.unit}` },
-									{
-										label: "Location",
-										value: drug.location?.replace("-", " "),
-									},
-									{
-										label: "Status",
-										value: drug.stockStatus?.replace("-", " "),
-									},
-								].map((item, index) => (
-									<div key={index} className="p-3 bg-slate-50 rounded-xl">
-										<p className="text-xs text-slate-500 mb-1">{item.label}</p>
-										<p className="font-medium text-slate-900 capitalize">
-											{item.value}
+								{/* Drug Info Card */}
+								<div className="flex items-center gap-4 p-4 bg-gradient-to-r from-slate-50 to-slate-100/50 rounded-xl border border-slate-200/60">
+									<div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-teal-500/25">
+										<Package className="w-8 h-8 text-white" />
+									</div>
+									<div className="flex-1">
+										<h3 className="font-bold text-slate-900 text-lg">
+											{drug.name}
+										</h3>
+										<p className="text-sm text-slate-500 font-mono">
+											{drug.drugId}
 										</p>
 									</div>
-								))}
-							</div>
+								</div>
 
-							{/* Actions */}
-							<div className="flex gap-3 pt-2">
-								<button
-									onClick={() => navigate(`/inventory/${drug._id}`)}
-									className="btn-primary flex-1"
-								>
-									View Details
-									<ArrowRight className="w-4 h-4" />
-								</button>
+								{/* Drug Details Grid */}
+								<div className="grid grid-cols-2 gap-3">
+									{[
+										{
+											label: "Batch Number",
+											value: drug.batchNo,
+											icon: "batch",
+										},
+										{
+											label: "Quantity",
+											value: `${drug.quantity} ${drug.unit}`,
+											icon: "qty",
+										},
+										{
+											label: "Location",
+											value: drug.location?.replace("-", " "),
+											icon: "loc",
+										},
+										{
+											label: "Stock Status",
+											value: drug.stockStatus?.replace("-", " "),
+											icon: "status",
+										},
+									].map((item, index) => (
+										<div
+											key={index}
+											className="p-4 bg-slate-50 rounded-xl border border-slate-100 hover:border-teal-200 hover:bg-teal-50/30 transition-all"
+										>
+											<p className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">
+												{item.label}
+											</p>
+											<p className="font-semibold text-slate-900 capitalize">
+												{item.value}
+											</p>
+										</div>
+									))}
+								</div>
+
+								{/* Actions */}
+								<div className="flex gap-3 pt-2">
+									<button
+										onClick={() => navigate(`/inventory/${drug._id}`)}
+										className="btn btn-primary flex-1 py-3"
+									>
+										<Eye className="w-4 h-4" />
+										View Full Details
+										<ArrowRight className="w-4 h-4" />
+									</button>
+									<button
+										onClick={() => {
+											setDrug(null);
+											setScannedData(null);
+											startScanner();
+										}}
+										className="btn btn-secondary py-3"
+									>
+										<Scan className="w-4 h-4" />
+									</button>
+								</div>
+							</div>
+						) : scannedData?.error ? (
+							<div className="text-center py-12 animate-fade-in">
+								<div className="relative inline-block mb-4">
+									<div className="w-24 h-24 rounded-full bg-red-50 flex items-center justify-center">
+										<div className="w-20 h-20 rounded-full bg-red-100 flex items-center justify-center">
+											<AlertCircle className="w-10 h-10 text-red-500" />
+										</div>
+									</div>
+								</div>
+								<h3 className="font-bold text-slate-900 text-lg mb-2">
+									Verification Failed
+								</h3>
+								<p className="text-slate-500 mb-6 max-w-xs mx-auto">
+									The scanned code is not recognized or the drug was not found
+									in our database
+								</p>
 								<button
 									onClick={() => {
-										setDrug(null);
 										setScannedData(null);
 										startScanner();
 									}}
-									className="btn-secondary"
+									className="btn btn-secondary"
 								>
 									<Scan className="w-4 h-4" />
 									Scan Again
 								</button>
 							</div>
-						</div>
-					) : scannedData?.error ? (
-						<div className="text-center py-12 animate-fade-in">
-							<div className="w-20 h-20 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
-								<AlertCircle className="w-10 h-10 text-red-500" />
-							</div>
-							<h3 className="font-semibold text-slate-900 mb-2">
-								Invalid QR Code
-							</h3>
-							<p className="text-slate-500 mb-6">
-								The scanned code is not recognized or the drug was not found
-							</p>
-							<button
-								onClick={() => {
-									setScannedData(null);
-									startScanner();
-								}}
-								className="btn-secondary"
-							>
-								<Scan className="w-4 h-4" />
-								Try Again
-							</button>
-						</div>
-					) : (
-						<div className="text-center py-16">
-							<div className="relative inline-block mb-6">
-								<div className="w-24 h-24 rounded-2xl bg-slate-100 flex items-center justify-center">
-									<QrCode className="w-12 h-12 text-slate-300" />
+						) : (
+							<div className="text-center py-12">
+								<div className="relative inline-block mb-6">
+									<div className="w-28 h-28 rounded-3xl bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center border border-slate-200">
+										<QrCode className="w-14 h-14 text-slate-300" />
+									</div>
 								</div>
+								<h3 className="font-semibold text-slate-900 mb-2">
+									Awaiting Scan
+								</h3>
+								<p className="text-slate-500 max-w-xs mx-auto">
+									Start the scanner and point it at a QR code to verify product
+									authenticity
+								</p>
 							</div>
-							<h3 className="font-semibold text-slate-900 mb-2">
-								No Scan Results
-							</h3>
-							<p className="text-slate-500">
-								Scan a QR code to see verification results
-							</p>
-						</div>
-					)}
+						)}
+					</div>
 				</div>
 			</div>
 
 			{/* Quick Tips */}
-			<div className="card-elevated">
-				<h3 className="font-semibold text-slate-900 mb-4">Quick Tips</h3>
+			<div className="bg-white rounded-2xl shadow-sm border border-slate-200/60 p-6">
+				<div className="flex items-center gap-3 mb-5">
+					<div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/25">
+						<Zap className="w-5 h-5 text-white" />
+					</div>
+					<h3 className="font-semibold text-slate-900 text-lg">
+						Quick Tips for Best Results
+					</h3>
+				</div>
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 					{[
 						{
 							title: "Good Lighting",
 							desc: "Ensure adequate lighting for best scan results",
+							color: "from-teal-500 to-cyan-500",
 						},
 						{
 							title: "Steady Position",
 							desc: "Hold the QR code steady within the frame",
+							color: "from-blue-500 to-indigo-500",
 						},
 						{
 							title: "Clean Surface",
 							desc: "Make sure the QR code is clean and undamaged",
+							color: "from-emerald-500 to-teal-500",
 						},
 					].map((tip, index) => (
 						<div
 							key={index}
-							className="flex items-start gap-3 p-4 bg-slate-50 rounded-xl"
+							className="group flex items-start gap-4 p-5 bg-gradient-to-br from-slate-50 to-white rounded-xl border border-slate-100 hover:border-teal-200 hover:shadow-md transition-all"
 						>
-							<div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center flex-shrink-0">
-								<span className="text-sm font-bold text-teal-600">
+							<div
+								className={`w-10 h-10 rounded-xl bg-gradient-to-br ${tip.color} flex items-center justify-center flex-shrink-0 shadow-lg group-hover:scale-110 transition-transform`}
+							>
+								<span className="text-sm font-bold text-white">
 									{index + 1}
 								</span>
 							</div>
 							<div>
-								<p className="font-medium text-slate-900">{tip.title}</p>
+								<p className="font-semibold text-slate-900 mb-1">{tip.title}</p>
 								<p className="text-sm text-slate-500">{tip.desc}</p>
 							</div>
 						</div>
@@ -368,6 +449,377 @@ export default function Scanner() {
 		</div>
 	);
 }
+
+// import { useState, useEffect, useRef } from "react";
+// import { useNavigate } from "react-router-dom";
+// import { Html5QrcodeScanner } from "html5-qrcode";
+// import { drugAPI, movementAPI } from "../services/api";
+// import {
+// 	QrCode,
+// 	Package,
+// 	Truck,
+// 	X,
+// 	CheckCircle,
+// 	Scan,
+// 	Camera,
+// 	ArrowRight,
+// 	AlertCircle,
+// } from "lucide-react";
+// import toast from "react-hot-toast";
+
+// export default function Scanner() {
+// 	const [scanning, setScanning] = useState(false);
+// 	const [scannedData, setScannedData] = useState(null);
+// 	const [drug, setDrug] = useState(null);
+// 	const [loading, setLoading] = useState(false);
+// 	const [scanMode, setScanMode] = useState("drug");
+// 	const scannerRef = useRef(null);
+// 	const navigate = useNavigate();
+
+// 	useEffect(() => {
+// 		return () => {
+// 			if (scannerRef.current) {
+// 				scannerRef.current.clear();
+// 			}
+// 		};
+// 	}, []);
+
+// 	const startScanner = () => {
+// 		setScanning(true);
+// 		setScannedData(null);
+// 		setDrug(null);
+
+// 		setTimeout(() => {
+// 			const scanner = new Html5QrcodeScanner("qr-reader", {
+// 				fps: 10,
+// 				qrbox: { width: 250, height: 250 },
+// 			});
+
+// 			scanner.render(onScanSuccess, onScanError);
+// 			scannerRef.current = scanner;
+// 		}, 100);
+// 	};
+
+// 	const stopScanner = () => {
+// 		if (scannerRef.current) {
+// 			scannerRef.current.clear();
+// 			scannerRef.current = null;
+// 		}
+// 		setScanning(false);
+// 	};
+
+// 	const onScanSuccess = async (decodedText) => {
+// 		stopScanner();
+
+// 		try {
+// 			const data = JSON.parse(decodedText);
+// 			setScannedData(data);
+
+// 			if (data.drugId) {
+// 				setLoading(true);
+// 				const response = await drugAPI.scanQR({
+// 					drugId: data.drugId,
+// 					batchNo: data.batchNo,
+// 				});
+// 				setDrug(response.data.drug);
+// 				toast.success("Drug found!");
+// 			}
+// 		} catch (error) {
+// 			toast.error("Invalid QR code or drug not found");
+// 			setScannedData({ raw: decodedText, error: true });
+// 		} finally {
+// 			setLoading(false);
+// 		}
+// 	};
+
+// 	const onScanError = (error) => {
+// 		// Ignore scan errors
+// 	};
+
+// 	const handleUpdateMovement = async (movementId, location) => {
+// 		try {
+// 			await movementAPI.scan(movementId, {
+// 				location,
+// 				notes: "Scanned via QR code",
+// 			});
+// 			toast.success("Movement updated successfully");
+// 		} catch (error) {
+// 			toast.error("Failed to update movement");
+// 		}
+// 	};
+
+// 	return (
+// 		<div className="space-y-6 animate-fade-in">
+// 			{/* Header */}
+// 			<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+// 				<div>
+// 					<h1 className="text-2xl font-bold text-slate-900">QR Scanner</h1>
+// 					<p className="text-slate-500">
+// 						Scan drug QR codes to verify and track inventory
+// 					</p>
+// 				</div>
+
+// 				{/* Scan Mode Toggle */}
+// 				<div className="flex gap-2 p-1 bg-slate-100 rounded-xl">
+// 					<button
+// 						onClick={() => setScanMode("drug")}
+// 						className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+// 							scanMode === "drug"
+// 								? "bg-white text-teal-600 shadow-sm"
+// 								: "text-slate-600 hover:text-slate-900"
+// 						}`}
+// 					>
+// 						<Package className="w-4 h-4" />
+// 						Drug
+// 					</button>
+// 					<button
+// 						onClick={() => setScanMode("movement")}
+// 						className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+// 							scanMode === "movement"
+// 								? "bg-white text-teal-600 shadow-sm"
+// 								: "text-slate-600 hover:text-slate-900"
+// 						}`}
+// 					>
+// 						<Truck className="w-4 h-4" />
+// 						Movement
+// 					</button>
+// 				</div>
+// 			</div>
+
+// 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+// 				{/* Scanner Panel */}
+// 				<div className="card-elevated">
+// 					<div className="flex items-center gap-3 mb-6">
+// 						<div className="icon-box icon-box-lg bg-gradient-to-br from-teal-500 to-cyan-500">
+// 							<Scan className="w-6 h-6 text-white" />
+// 						</div>
+// 						<div>
+// 							<h2 className="text-lg font-semibold text-slate-900">Scanner</h2>
+// 							<p className="text-sm text-slate-500">
+// 								{scanMode === "drug"
+// 									? "Scan drug QR codes"
+// 									: "Scan movement QR codes"}
+// 							</p>
+// 						</div>
+// 					</div>
+
+// 					{!scanning ? (
+// 						<div className="text-center py-12">
+// 							<div className="relative inline-block mb-6">
+// 								<div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
+// 									<QrCode className="w-16 h-16 text-slate-400" />
+// 								</div>
+// 								{/* Scanning Animation Overlay */}
+// 								<div className="absolute inset-0 rounded-3xl border-2 border-dashed border-teal-300 animate-pulse"></div>
+// 							</div>
+// 							<p className="text-slate-500 mb-6">
+// 								Position QR code within the scanner frame
+// 							</p>
+// 							<button onClick={startScanner} className="btn-primary">
+// 								<Camera className="w-4 h-4" />
+// 								Start Scanner
+// 							</button>
+// 						</div>
+// 					) : (
+// 						<div className="space-y-4">
+// 							<div className="relative rounded-2xl overflow-hidden bg-slate-900">
+// 								{/* Scanner Overlay */}
+// 								<div className="absolute inset-0 z-10 pointer-events-none">
+// 									<div className="absolute inset-0 flex items-center justify-center">
+// 										<div className="w-64 h-64 relative">
+// 											{/* Corner Brackets */}
+// 											<div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-teal-400 rounded-tl-lg"></div>
+// 											<div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-teal-400 rounded-tr-lg"></div>
+// 											<div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-teal-400 rounded-bl-lg"></div>
+// 											<div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-teal-400 rounded-br-lg"></div>
+// 											{/* Scanning Line */}
+// 											<div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-teal-400 to-transparent animate-scan"></div>
+// 										</div>
+// 									</div>
+// 								</div>
+// 								<div id="qr-reader" className="w-full" />
+// 							</div>
+// 							<button onClick={stopScanner} className="btn-secondary w-full">
+// 								<X className="w-4 h-4" />
+// 								Stop Scanner
+// 							</button>
+// 						</div>
+// 					)}
+// 				</div>
+
+// 				{/* Results Panel */}
+// 				<div className="card-elevated">
+// 					<div className="flex items-center gap-3 mb-6">
+// 						<div className="icon-box icon-box-lg bg-gradient-to-br from-emerald-500 to-teal-500">
+// 							<CheckCircle className="w-6 h-6 text-white" />
+// 						</div>
+// 						<div>
+// 							<h2 className="text-lg font-semibold text-slate-900">
+// 								Scan Result
+// 							</h2>
+// 							<p className="text-sm text-slate-500">Verification details</p>
+// 						</div>
+// 					</div>
+
+// 					{loading ? (
+// 						<div className="flex flex-col items-center justify-center py-16">
+// 							<div className="relative">
+// 								<div className="w-16 h-16 border-4 border-slate-200 rounded-full"></div>
+// 								<div className="absolute inset-0 w-16 h-16 border-4 border-teal-500 rounded-full border-t-transparent animate-spin"></div>
+// 							</div>
+// 							<p className="text-slate-500 mt-4">Verifying drug...</p>
+// 						</div>
+// 					) : drug ? (
+// 						<div className="space-y-4 animate-scale-in">
+// 							{/* Success Banner */}
+// 							<div className="flex items-center gap-3 p-4 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl">
+// 								<div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+// 									<CheckCircle className="w-5 h-5 text-emerald-600" />
+// 								</div>
+// 								<div>
+// 									<span className="font-semibold text-emerald-700">
+// 										Drug Verified
+// 									</span>
+// 									<p className="text-sm text-emerald-600">
+// 										Authentic product confirmed
+// 									</p>
+// 								</div>
+// 							</div>
+
+// 							{/* Drug Info */}
+// 							<div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl">
+// 								<div className="w-14 h-14 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center">
+// 									<Package className="w-7 h-7 text-white" />
+// 								</div>
+// 								<div>
+// 									<h3 className="font-semibold text-slate-900">{drug.name}</h3>
+// 									<p className="text-sm text-slate-500">{drug.drugId}</p>
+// 								</div>
+// 							</div>
+
+// 							{/* Drug Details Grid */}
+// 							<div className="grid grid-cols-2 gap-3">
+// 								{[
+// 									{ label: "Batch", value: drug.batchNo },
+// 									{ label: "Quantity", value: `${drug.quantity} ${drug.unit}` },
+// 									{
+// 										label: "Location",
+// 										value: drug.location?.replace("-", " "),
+// 									},
+// 									{
+// 										label: "Status",
+// 										value: drug.stockStatus?.replace("-", " "),
+// 									},
+// 								].map((item, index) => (
+// 									<div key={index} className="p-3 bg-slate-50 rounded-xl">
+// 										<p className="text-xs text-slate-500 mb-1">{item.label}</p>
+// 										<p className="font-medium text-slate-900 capitalize">
+// 											{item.value}
+// 										</p>
+// 									</div>
+// 								))}
+// 							</div>
+
+// 							{/* Actions */}
+// 							<div className="flex gap-3 pt-2">
+// 								<button
+// 									onClick={() => navigate(`/inventory/${drug._id}`)}
+// 									className="btn-primary flex-1"
+// 								>
+// 									View Details
+// 									<ArrowRight className="w-4 h-4" />
+// 								</button>
+// 								<button
+// 									onClick={() => {
+// 										setDrug(null);
+// 										setScannedData(null);
+// 										startScanner();
+// 									}}
+// 									className="btn-secondary"
+// 								>
+// 									<Scan className="w-4 h-4" />
+// 									Scan Again
+// 								</button>
+// 							</div>
+// 						</div>
+// 					) : scannedData?.error ? (
+// 						<div className="text-center py-12 animate-fade-in">
+// 							<div className="w-20 h-20 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
+// 								<AlertCircle className="w-10 h-10 text-red-500" />
+// 							</div>
+// 							<h3 className="font-semibold text-slate-900 mb-2">
+// 								Invalid QR Code
+// 							</h3>
+// 							<p className="text-slate-500 mb-6">
+// 								The scanned code is not recognized or the drug was not found
+// 							</p>
+// 							<button
+// 								onClick={() => {
+// 									setScannedData(null);
+// 									startScanner();
+// 								}}
+// 								className="btn-secondary"
+// 							>
+// 								<Scan className="w-4 h-4" />
+// 								Try Again
+// 							</button>
+// 						</div>
+// 					) : (
+// 						<div className="text-center py-16">
+// 							<div className="relative inline-block mb-6">
+// 								<div className="w-24 h-24 rounded-2xl bg-slate-100 flex items-center justify-center">
+// 									<QrCode className="w-12 h-12 text-slate-300" />
+// 								</div>
+// 							</div>
+// 							<h3 className="font-semibold text-slate-900 mb-2">
+// 								No Scan Results
+// 							</h3>
+// 							<p className="text-slate-500">
+// 								Scan a QR code to see verification results
+// 							</p>
+// 						</div>
+// 					)}
+// 				</div>
+// 			</div>
+
+// 			{/* Quick Tips */}
+// 			<div className="card-elevated">
+// 				<h3 className="font-semibold text-slate-900 mb-4">Quick Tips</h3>
+// 				<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+// 					{[
+// 						{
+// 							title: "Good Lighting",
+// 							desc: "Ensure adequate lighting for best scan results",
+// 						},
+// 						{
+// 							title: "Steady Position",
+// 							desc: "Hold the QR code steady within the frame",
+// 						},
+// 						{
+// 							title: "Clean Surface",
+// 							desc: "Make sure the QR code is clean and undamaged",
+// 						},
+// 					].map((tip, index) => (
+// 						<div
+// 							key={index}
+// 							className="flex items-start gap-3 p-4 bg-slate-50 rounded-xl"
+// 						>
+// 							<div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center flex-shrink-0">
+// 								<span className="text-sm font-bold text-teal-600">
+// 									{index + 1}
+// 								</span>
+// 							</div>
+// 							<div>
+// 								<p className="font-medium text-slate-900">{tip.title}</p>
+// 								<p className="text-sm text-slate-500">{tip.desc}</p>
+// 							</div>
+// 						</div>
+// 					))}
+// 				</div>
+// 			</div>
+// 		</div>
+// 	);
+// }
 
 // above correct
 

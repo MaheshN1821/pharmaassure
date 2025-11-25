@@ -11,6 +11,18 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 
+const FormSection = ({ icon: Icon, title, children }) => (
+	<div className="space-y-4">
+		<div className="flex items-center gap-3 pb-3 border-b border-slate-200">
+			<div className="p-2 bg-primary-100 rounded-lg">
+				<Icon className="w-4 h-4 text-primary-600" />
+			</div>
+			<h3 className="font-semibold text-slate-900">{title}</h3>
+		</div>
+		{children}
+	</div>
+);
+
 export default function AddDrug() {
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(false);
@@ -71,17 +83,17 @@ export default function AddDrug() {
 		}
 	};
 
-	const FormSection = ({ icon: Icon, title, children }) => (
-		<div className="space-y-4">
-			<div className="flex items-center gap-3 pb-3 border-b border-slate-200">
-				<div className="p-2 bg-primary-100 rounded-lg">
-					<Icon className="w-4 h-4 text-primary-600" />
-				</div>
-				<h3 className="font-semibold text-slate-900">{title}</h3>
-			</div>
-			{children}
-		</div>
-	);
+	// const FormSection = ({ icon: Icon, title, children }) => (
+	// 	<div className="space-y-4">
+	// 		<div className="flex items-center gap-3 pb-3 border-b border-slate-200">
+	// 			<div className="p-2 bg-primary-100 rounded-lg">
+	// 				<Icon className="w-4 h-4 text-primary-600" />
+	// 			</div>
+	// 			<h3 className="font-semibold text-slate-900">{title}</h3>
+	// 		</div>
+	// 		{children}
+	// 	</div>
+	// );
 
 	return (
 		<div className="max-w-4xl mx-auto space-y-6">

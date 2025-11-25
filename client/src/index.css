@@ -172,7 +172,7 @@ body {
 	backdrop-filter: blur(4px);
 	border-radius: 1rem;
 	box-shadow: var(--shadow-sm);
-	border: 1px solid rgba(226, 232, 240, 0.6);
+	border: 1px solid rgba(128, 128, 128, 0.274);
 	padding: 1.5rem;
 	transition: all 0.3s ease;
 }
