@@ -30,6 +30,8 @@ export default function CreateMovement() {
 		notes: "",
 	});
 
+	console.log(drivers);
+
 	useEffect(() => {
 		fetchDrugs();
 		fetchDrivers();
