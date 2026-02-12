@@ -37,12 +37,12 @@ const roles = [
 		icon: Truck,
 		description: "Transport & delivery operations",
 	},
-	{
-		value: "admin",
-		label: "Administrator",
-		icon: Shield,
-		description: "Full system access & management",
-	},
+	// {
+	// 	value: "admin",
+	// 	label: "Administrator",
+	// 	icon: Shield,
+	// 	description: "Full system access & management",
+	// },
 ];
 
 export default function Register() {
